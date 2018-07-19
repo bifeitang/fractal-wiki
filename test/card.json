@@ -6,19 +6,18 @@
       "FnName": "cardCreate",
       "Input": {
         "title": "HoloOverview",
-        "source": "Bob",
         "content": "Holochain is an awesome technique",
-        "nodeHash": "000"
+        "card_type": "plain_text"
       },
-      "Output": "%h5%",
+      "Output": "%h%",
       "Exposure": "public"
     },
     {
       "Convey": "Get the content of the card through cardRead",
       "Zome": "card",
       "FnName": "cardRead",
-      "Input": "%h1%",
-      "Regexp": "{\"title\":\"title of the card\",\"source\":\"writer of the card\",\"content\":\"content of the card\",\"timestamp\":[0-9]+,\"like\":[0-9]+,\"dislike\":[0-9]+,\"card_type\":\"string\"}",
+      "Input": "%h%",
+      "Regexp": "{\"card_type\":\"plain_text\",\"content\":\"Holochain is an awesome technique\",\"title\":\"HoloOverview\"}",
       "Exposure": "public"
     },
     {
@@ -36,11 +35,26 @@
       "Output": "%h%"
     },
     {
+      "Convey": "Add another card to the chain",
+      "Zome": "card",
+      "FnName": "cardCreate",
+      "Input": {
+        "title": "HoloExplain",
+        "content": "Holochain is an awesome technique",
+        "card_type": "plain_text"
+      },
+      "Output": "%h%",
+      "Exposure": "public"
+    },
+    {
       "Convey": "auto-generated test for addNodeLink",
       "Zome": "card",
-      "FnName": "addNodeLink",
-      "Input": "",
-      "Output": {}
+      "FnName": "addLink",
+      "Input": {
+        "curHash": "%h%",
+        "targetHash": "%h1%"
+      },
+      "Output": "%h%"
     }
   ]
 }

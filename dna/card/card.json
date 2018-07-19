@@ -4,29 +4,15 @@
   "type": "object",
   "required": [
     "title",
-    "source",
+    "card_type",
     "content"
   ],
   "properties": {
     "title": {
       "type": "string"
     },
-    "source": {
-      "type": "string"
-    },
     "content": {
       "type": "string"
-    },
-    "timestamp": {
-      "type": "integer"
-    },
-    "like": {
-      "default": 0,
-      "type": "integer"
-    },
-    "dislike": {
-      "default": 0,
-      "type": "integer"
     },
     "card_type": {
       "type": "string"

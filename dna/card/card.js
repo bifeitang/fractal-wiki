@@ -22,41 +22,15 @@ function cardCreate (params) {
   }*/
   // Is there necessarily link the card to a certain position of the tree?
 
-
   var card = {
     title: params.title,
     content: params.content,
-    card_type: params.cardType
+    card_type: params.card_type
   }
 
   var cardHash = commit("card", card)
 
-  // debug("card title: " + card.title)
-  debug("card hash: " + cardHash)
-
-  var cardId = {
-    title: params.title,
-    source: params.source
-  }
-
-  anchorHash = anchor('cardId', JSON.stringify(cardId))
-
-  var cardLinkHash = commit('id_card_link', {
-        Links: [
-         {
-            Base: anchorHash,
-            Link: cardHash,
-            Tag: 'GET_CARD'
-        }
-     ]
-   });
-
   return cardHash;
-}
-
-function getCardByAnchor(anchorHash) {
-  var links = getLinks(anchorHash, 'GET_CARD', {Load: true});
-  return links[0].Hash;
 }
 
 function cardRead (cardHash) {
@@ -80,6 +54,21 @@ function cardUpdate (cardHash) {
 function cardDelete (cardHash) {
   var result = remove(cardHash, "");
   return result;
+}
+
+function addLink (params) {
+  var targetHash = params.targetHash
+  var curHash = params.curHash
+  debug("targetHash: " + targetHash)
+  debug("curHash: " + curHash)
+  cardLinkHash = commit("card_link", {
+    "Links": [
+      {"Base": curHash, "Link": targetHash, "Tag": 'OUT_LINK'},
+      {"Base": targetHash, "Link": curHash, "Tag": 'IN_LINK'}
+    ]
+  })
+  debug("cardLinkHash: " + cardLinkHash)
+  return cardLinkHash;
 }
 
 
@@ -113,7 +102,7 @@ function validateCommit (entryName, entry, header, pkg, sources) {
     case "card":
       // check to determine the user permission commit to the local_chain
       return true;
-    case "id_card_link":
+    case "card_link":
       // be sure to consider many edge cases for validating
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
@@ -140,7 +129,7 @@ function validatePut (entryName, entry, header, pkg, sources) {
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
       return true;
-    case "id_card_link":
+    case "card_link":
       // be sure to consider many edge cases for validating
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
@@ -168,7 +157,7 @@ function validateMod (entryName, entry, header, replaces, pkg, sources) {
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
       return true;
-    case "id_card_link":
+    case "card_link":
       // be sure to consider many edge cases for validating
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
@@ -194,7 +183,7 @@ function validateDel (entryName, hash, pkg, sources) {
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
       return true;
-    case "id_card_link":
+    case "card_link":
       // be sure to consider many edge cases for validating
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
@@ -221,7 +210,7 @@ function validateLink (entryName, baseHash, links, pkg, sources) {
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!
       return true;
-    case "id_card_link":
+    case "card_link":
       // be sure to consider many edge cases for validating
       // do not just flip this to true without considering what that means
       // the action will ONLY be successfull if this returns true, so watch out!

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "UUID": "1f1e032a-a6ce-426d-aab0-22a9ae407bff",
+  "UUID": "1f1e032a-a6ce-426d-aab0-22a9ae407bfc",
   "Name": "HoloWiki",
   "Properties": {
     "description": "fractal wiki on holochain",
@@ -62,7 +62,7 @@
           "SchemaFile": "card.json"
         },
         {
-          "Name": "id_card_link",
+          "Name": "card_link",
           "Required": true,
           "DataFormat": "links",
           "Sharing": "public"
@@ -90,58 +90,9 @@
           "Exposure": "public"
         },
         {
-          "Name": "getCardByAnchor",
-          "CallingType": "string",
-          "Exposure": "public"
-        }
-      ]
-    },
-    {
-      "Name": "Tree",
-      "Description": "Maintain the structure of the whole blog",
-      "RibosomeType": "js",
-      "CodeFile": "tree.js",
-      "Entries": [
-        {
-          "Name": "node",
-          "Required": true,
-          "DataFormat": "json",
-          "Sharing": "public",
-          "SchemaFile": "node.json"
-        },
-        {
-          "Name": "child_link",
-          "Required": true,
-          "DataFormat": "links",
-          "Sharing": "public"
-        },
-        {
-          "Name": "card_link",
-          "Required": true,
-          "DataFormat": "links",
-          "Sharing": "public"
-        }
-      ],
-      "Functions": [
-        {
-          "Name": "nodeCreate",
+          "Name": "addLink",
           "CallingType": "json",
           "Exposure": "public"
-        },
-        {
-          "Name": "nodeRead",
-          "CallingType": "json",
-          "Exposure": "public"
-        },
-        {
-          "Name": "nodeDelete",
-          "CallingType": "json",
-          "Exposure": "public"
-        },
-        {
-          "Name": "getTopics",
-          "CallingType": "json",
-          "Exposure": ""
         }
       ]
     }

@@ -1,0 +1,149 @@
+{
+  "Version": 1,
+  "UUID": "1f1e032a-a6ce-426d-aab0-22a9ae407bff",
+  "Name": "HoloWiki",
+  "Properties": {
+    "description": "fractal wiki on holochain",
+    "language": "en"
+  },
+  "PropertiesSchemaFile": "properties_schema.json",
+  "DHTConfig": {
+    "HashType": "sha2-256"
+  },
+  "Zomes": [
+    {
+      "Name": "anchors",
+      "Description": "Easy to find, fixed hash linking to a hash of card",
+      "RibosomeType": "js",
+      "CodeFile": "anchor.js",
+      "Entries": [
+        {
+          "Name": "anchor",
+          "Required": true,
+          "DataFormat": "json",
+          "Sharing": "public",
+          "SchemaFile": "anchor.json"
+        },
+        {
+          "Name": "anchor_link",
+          "Required": true,
+          "DataFormat": "links"
+        }
+      ],
+      "Functions": [
+        {
+          "Name": "getAnchors",
+          "CallingType": "string",
+          "Exposure": "public"
+        },
+        {
+          "Name": "isExists",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "anchor",
+          "CallingType": "json",
+          "Exposure": "public"
+        }
+      ]
+    },
+    {
+      "Name": "card",
+      "Description": "wiki card for a certain topic",
+      "RibosomeType": "js",
+      "CodeFile": "card.js",
+      "Entries": [
+        {
+          "Name": "card",
+          "Required": true,
+          "DataFormat": "json",
+          "Sharing": "public",
+          "SchemaFile": "card.json"
+        },
+        {
+          "Name": "id_card_link",
+          "Required": true,
+          "DataFormat": "links",
+          "Sharing": "public"
+        }
+      ],
+      "Functions": [
+        {
+          "Name": "cardCreate",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "cardRead",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "cardUpdate",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "cardDelete",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "getCardByAnchor",
+          "CallingType": "string",
+          "Exposure": "public"
+        }
+      ]
+    },
+    {
+      "Name": "Tree",
+      "Description": "Maintain the structure of the whole blog",
+      "RibosomeType": "js",
+      "CodeFile": "tree.js",
+      "Entries": [
+        {
+          "Name": "node",
+          "Required": true,
+          "DataFormat": "json",
+          "Sharing": "public",
+          "SchemaFile": "node.json"
+        },
+        {
+          "Name": "child_link",
+          "Required": true,
+          "DataFormat": "links",
+          "Sharing": "public"
+        },
+        {
+          "Name": "card_link",
+          "Required": true,
+          "DataFormat": "links",
+          "Sharing": "public"
+        }
+      ],
+      "Functions": [
+        {
+          "Name": "nodeCreate",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "nodeRead",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "nodeDelete",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "getTopics",
+          "CallingType": "json",
+          "Exposure": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "Tests": [
+    {
+      "Convey": "test the card create function",
+      "Zome": "card",
+      "FnName": "cardCreate",
+      "Input": {
+        "title": "HoloOverview",
+        "source": "Bob",
+        "content": "Holochain is an awesome technique",
+        "nodeHash": "000"
+      },
+      "Output": "%h5%",
+      "Exposure": "public"
+    },
+    {
+      "Convey": "Get the content of the card through cardRead",
+      "Zome": "card",
+      "FnName": "cardRead",
+      "Input": "%h1%",
+      "Regexp": "{\"title\":\"title of the card\",\"source\":\"writer of the card\",\"content\":\"content of the card\",\"timestamp\":[0-9]+,\"like\":[0-9]+,\"dislike\":[0-9]+,\"card_type\":\"string\"}",
+      "Exposure": "public"
+    },
+    {
+      "Convey": "auto-generated test for cardUpdate",
+      "Zome": "card",
+      "FnName": "cardUpdate",
+      "Input": "%h%",
+      "Output": "%h%"
+    },
+    {
+      "Convey": "auto-generated test for cardDelete",
+      "Zome": "card",
+      "FnName": "cardDelete",
+      "Input": "%h%",
+      "Output": "%h%"
+    },
+    {
+      "Convey": "auto-generated test for addNodeLink",
+      "Zome": "card",
+      "FnName": "addNodeLink",
+      "Input": "",
+      "Output": {}
+    }
+  ]
+}

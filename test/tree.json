@@ -1,0 +1,53 @@
+{
+  "Tests": [
+    {
+      "Convey": "auto-generated test for nodeCreate",
+      "Zome": "Tree",
+      "FnName": "nodeCreate",
+      "Input": {
+        "parentId": "",
+        "height": 1,
+        "cardTitle": "HoloWiki",
+        "cardSource": "Alex"
+      },
+      "Output": "%h8%"
+    },
+    {
+      "Convey": "Connect to the treeNode just generated",
+      "Zome": "Tree",
+      "FnName": "nodeCreate",
+      "Input": {
+        "parentId": "%h8%",
+        "height": 2,
+        "cardTitle": "HoloWiki",
+        "cardSource": "Alex"
+      },
+      "Output": "%h4%"
+    },
+    {
+      "Convey": "auto-generated test for nodeRead",
+      "Zome": "Tree",
+      "FnName": "nodeRead",
+      "Input": "%h%",
+      "Output": {
+        "rootId": "a string",
+        "height": 0,
+        "cardId": "a string"
+      }
+    },
+    {
+      "Convey": "auto-generated test for nodeDelete",
+      "Zome": "Tree",
+      "FnName": "nodeDelete",
+      "Input": "%h%",
+      "Output": "%h%"
+    },
+    {
+      "Convey": "auto-generated test for getTopics",
+      "Zome": "Tree",
+      "FnName": "getTopics",
+      "Input": "",
+      "Output": {}
+    }
+  ]
+}

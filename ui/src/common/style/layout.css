@@ -1,0 +1,72 @@
+body {
+  background-color: rgb(204, 204, 204);
+  font: 400 2.5em/1.38 Bitter;
+  color: rgb(255, 255, 255);
+}
+
+.banner {
+  position: relative;
+  float: left;
+  z-index: 0;
+  width: 100%;
+  height: 121px;
+  background-color: rgb(116, 133, 208);
+}
+
+.card_list {
+  /* position: absolute;
+  top: 159px;
+  right: 4.0833333333%; */
+  z-index: 4;
+  width: 100%;
+  /* height: 509px; */
+  background-color: rgb(222, 222, 222);
+}
+
+.homepage {
+  display: block;
+  position: relative;
+  float: left;
+  clear: both;
+  z-index: 1;
+  width: 21.75%;
+  height: 71px;
+  margin: -99px 0 0 4.41667%;
+  background-color: rgb(116, 133, 208);
+  font-size: 1em;
+  text-align: center;
+  color: rgb(255, 255, 255);
+}
+
+.search {
+  position: absolute;
+  top: 40px;
+  left: 65%;
+  z-index: 2;
+  width: 29.9166666666%;
+  height: 33px;
+  border-radius: 3px;
+  background-color: rgb(240, 171, 114);
+}
+
+.tree {
+  position: absolute;
+  top: 159px;
+  left: 2%;
+  z-index: 3;
+  width: 19%;
+  height: 369px;
+  border-radius: 2px;
+  background-color: rgb(255, 255, 255);
+}
+
+.card_button {
+  width: 75%;
+  position: absolute;
+  right: 2%;
+  top: calc(0% + 158px);
+}
+
+textarea{
+  display:none;
+}

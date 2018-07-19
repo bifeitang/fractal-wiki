@@ -39,9 +39,8 @@ function cardRead (cardHash) {
    * GetMask.EntryType
    * GetMask.Entry
    * GetMask.All */
-  var card = get(cardHash, {GetMask: HC.GetMask.Entry})
-  debug(card)
-  return card;
+  var card = get(cardHash)
+  return JSON.stringify(card);
 }
 
 function cardUpdate (cardHash) {

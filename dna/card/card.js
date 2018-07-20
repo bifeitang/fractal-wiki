@@ -39,8 +39,14 @@ function cardRead (cardHash) {
    * GetMask.EntryType
    * GetMask.Entry
    * GetMask.All */
-  var card = get(cardHash)
-  return JSON.stringify(card);
+  var hashList = cardHash.split(",")
+  var contentList = []
+  for (var i = 0; i < hashList.length; i++) {
+    var content = get(hashList[i])
+    contentList.push(JSON.stringify(content))
+  }
+
+  return contentList.join('|');
 }
 
 function cardUpdate (cardHash) {

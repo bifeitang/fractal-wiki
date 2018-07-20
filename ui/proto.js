@@ -45,13 +45,25 @@ const readCardPromise = (name, data) => {
 document.querySelector('#refresh').addEventListener('click', e =>{
   var explainCard = document.getElementById('explain-card')
   var inputCard = document.querySelector('#recently-created')
+  var userInput = document.querySelector('#usr-input').value
   // match: input file string; output /[A-Za-z0-9]{46}/g list of hash
-  var hashList = inputCard.innerHTML.match(/[A-Za-z0-9]{46}/g)
+  // var hashList = inputCard.innerHTML.match(/[A-Za-z0-9]{46}/g)
   // request: send request, get all contents together, in a list
-  readCardPromise('cardRead', String(hashList)).then(result => {
+/*  readCardPromise('cardRead', String(hashList)).then(result => {
     var contents = result.split("|")
     var counter = 0
     explainCard.innerHTML = inputCard.innerHTML.replace(/{{\w{46}}}/g, function(){
+      var replace = contents[counter]
+      counter += 1;
+      return replace;
+    });
+  });*/
+
+  var hashList = userInput.match(/[A-Za-z0-9]{46}/g)
+  readCardPromise('cardRead', String(hashList)).then(result => {
+    var contents = result.split("|")
+    var counter = 0
+    explainCard.innerText = userInput.replace(/{{\w{46}}}/g, function(){
       var replace = contents[counter]
       counter += 1;
       return replace;

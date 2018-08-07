@@ -30,6 +30,8 @@ function cardCreate (params) {
 
   var cardHash = commit("card", card)
 
+  debug("New card created:" + cardHash)
+
   return cardHash;
 }
 
@@ -45,6 +47,8 @@ function cardRead (cardHash) {
     var content = get(hashList[i])
     contentList.push(JSON.stringify(content))
   }
+
+  debug("Able to read the content of a new card: " + contentList)
 
   return contentList.join('|');
 }

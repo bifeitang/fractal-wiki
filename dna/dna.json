@@ -62,6 +62,16 @@
           "SchemaFile": "card.json"
         },
         {
+          "Name": "author",
+          "DataFormat": "string",
+          "Sharing": "public"
+        },
+        {
+          "Name": "author_link",
+          "DataFormat": "links",
+          "Sharing": "public"
+        },
+        {
           "Name": "card_link",
           "Required": true,
           "DataFormat": "links",
@@ -92,6 +102,11 @@
         {
           "Name": "addLink",
           "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "getCardLists",
+          "CallingType": "string",
           "Exposure": "public"
         }
       ]

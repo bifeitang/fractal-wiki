@@ -1,5 +1,3 @@
-'use strict';
-
 function anchor(anchorType, anchorText) {
   return call('anchors','anchor',{
     anchorType: anchorType,
@@ -18,13 +16,13 @@ function cardCreate (params) {
   }*/
   // Is there necessarily link the card to a certain position of the tree?
 
-  const card = {
+  var card = {
     title: params.title,
     content: params.content,
     card_type: params.card_type
   }
 
-  const cardHash = commit("card", card)
+  var cardHash = commit("card", card)
 
   commit('cardLinks', {Links:[
     {Base: App.Agent.Hash, Link: cardHash, Tag: "AUTHOR_TO_CARD"}
@@ -41,8 +39,8 @@ function cardRead (cardHash) {
    * GetMask.EntryType
    * GetMask.Entry
    * GetMask.All */
-  const hashList = cardHash.split(",")
-  const contentList = []
+  var hashList = cardHash.split(",")
+  var contentList = []
   for (var i = 0; i < hashList.length; i++) {
     var content = get(hashList[i])
     contentList.push(JSON.stringify(content))
@@ -54,13 +52,13 @@ function cardRead (cardHash) {
 }
 
 function cardUpdate (params) {
-  // Allowed changing area: title, content, card_type
-  const card = {
+
+  var updateCard = {
     title: params.title,
     content: params.content,
-    card_type: params.card_type,
+    card_type: params.card_type
   }
-  var cardOutHash = update("card", sampleValue, params.cardHash);
+  var cardOutHash = update("card", updateCard, params.cardHash);
   return cardOutHash;
 }
 
@@ -86,7 +84,7 @@ function addLink (params) {
 
 function getCardLists() {
   var authorList = []
-  let authors = getLinks(App.Key.Hash, "AUTHORS", {Load:true}).map(function(author){
+  var authors = getLinks(App.Key.Hash, "AUTHORS", {Load:true}).map(function(author){
     authorList.push(author.Entry);
   })
 
@@ -94,7 +92,7 @@ function getCardLists() {
   for (var i = 0; i < authorList.length; i++) {
     getLinks(authorList[i], "AUTHOR_TO_CARD", {Load: true}).map(function(cardHash){
       // TODO: store the first result in memory, don't get it all the time
-      const cardTitle = get(cardHash).title
+      var cardTitle = get(cardHash).title
       result.push({
         author: authorList[i],
         cardHash: cardHash,
@@ -115,8 +113,8 @@ function getCardLists() {
  * @return {boolean} success
  */
 function genesis () {
-  let authorHash = commit("authorHash", App.Agent.String)
-  commit("getAuthors", { Links: [
+  var authorHash = commit("author", App.Agent.String)
+  commit("author_link", { Links: [
     {Base: App.Key.Hash, Link: authorHash, Tag: "AUTHORS"}
   ]});
   return true;
@@ -139,6 +137,10 @@ function validateCommit (entryName, entry, header, pkg, sources) {
   switch (entryName) {
     case "card":
       // check to determine the user permission commit to the local_chain
+      return true;
+    case "author":
+      return true;
+    case "author_link":
       return true;
     case "card_link":
       // be sure to consider many edge cases for validating

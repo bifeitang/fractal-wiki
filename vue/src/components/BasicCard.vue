@@ -21,11 +21,15 @@
       </el-header>
 
       <el-main v-if="show">
-        <el-input type="textarea" :rows="10"
+        <!--<el-input type="textarea" :rows="10"
         placeholder="content of the card"
-        v-model.lazy="meta.content"></el-input>
-        <el-button type="success" round v-on:click="finishEdit">Submit</el-button>
+        v-model.lazy="meta.content"></el-input>-->
+        <Textarea></Textarea>
+
       </el-main>
+      <el-footer>
+        <el-button type="success" round v-on:click="finishEdit">Submit</el-button>
+      </el-footer>
     </div>
     <div class="card" type="button" v-if="!isEdit" v-on:dblclick="editCard">
       <el-header style="text-align: center; font-size: 16px">
@@ -61,6 +65,7 @@
 
 <script>
 import asyncComponents from './asyncComponents'
+import Textarea from './Textarea'
 
 export default {
   name: 'basic-card',
@@ -89,7 +94,8 @@ export default {
     }
   },
   components: {
-    asyncComponents
+    asyncComponents,
+    Textarea
   },
   created() {
     this.parseContent()

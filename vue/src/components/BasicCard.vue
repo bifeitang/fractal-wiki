@@ -21,10 +21,12 @@
       </el-header>
 
       <el-main v-if="show">
-        <!--<el-input type="textarea" :rows="10"
-        placeholder="content of the card"
-        v-model.lazy="meta.content"></el-input>-->
-        <Textarea></Textarea>
+
+        <VueTribute :options="tributeOptions">
+          <el-input type="textarea" :rows="10"
+          placeholder="content of the card"
+          v-model.lazy="meta.content"></el-input>
+        </VueTribute>
 
       </el-main>
       <el-footer>
@@ -65,7 +67,7 @@
 
 <script>
 import asyncComponents from './asyncComponents'
-import Textarea from './Textarea'
+import VueTribute from 'vue-tribute'
 
 export default {
   name: 'basic-card',
@@ -91,14 +93,18 @@ export default {
       show: true,
       isEdit: false,
       childCards: [],
+      tributeOptions: {
+        values: []
+      },
     }
   },
   components: {
     asyncComponents,
-    Textarea
+    VueTribute
   },
   created() {
-    this.parseContent()
+    this.parseContent();
+    setInterval(this.initCardList, 10000);
   },
   methods: {
     showCard() {
@@ -175,6 +181,31 @@ export default {
     editCard(e) {
       e.stopPropagation();
       this.isEdit = !this.isEdit;
+    },
+    initCardList() {
+      // Connect this with listener to the submit => create card => update list
+      const API_BASE = "http://localhost:4141/fn"
+
+      const readCardPromise = (name, data) => {
+        const url = `${API_BASE}/card/${name}`
+        return fetch(url, {
+          method: 'post',
+          body: (data),
+        }).then(r => r.json());
+      }
+
+      readCardPromise("getCardLists").then(cardList =>{
+        cardList.map(cardInfo => {
+          console.log(cardInfo)
+          this.append(cardInfo.author + cardInfo.cardTitle, cardInfo.cardHash)
+        })
+      })
+    },
+    append(key, value) {
+      this.tributeOptions.values.push({
+        key: key,
+        value: value,
+      })
     }
   }
 }

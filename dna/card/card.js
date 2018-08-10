@@ -18,14 +18,16 @@ function cardCreate (params) {
 
   var card = {
     title: params.title,
+    author: App.Agent.String,
     content: params.content,
     card_type: params.card_type
   }
 
   var cardHash = commit("card", card)
 
-  commit('cardLinks', {Links:[
-    {Base: App.Agent.Hash, Link: cardHash, Tag: "AUTHOR_TO_CARD"}
+  commit('author_card_link', {
+    "Links": [
+      {Base: makeHash("author", App.Agent.String), Link: cardHash, Tag: "AUTHOR_TO_CARD"}
   ]})
 
   debug("New card created:" + cardHash)
@@ -56,7 +58,8 @@ function cardUpdate (params) {
   var updateCard = {
     title: params.title,
     content: params.content,
-    card_type: params.card_type
+    card_type: params.card_type,
+    author: App.Agent.String
   }
   var cardOutHash = update("card", updateCard, params.cardHash);
   return cardOutHash;
@@ -70,15 +73,12 @@ function cardDelete (cardHash) {
 function addLink (params) {
   var targetHash = params.targetHash
   var curHash = params.curHash
-  debug("targetHash: " + targetHash)
-  debug("curHash: " + curHash)
   cardLinkHash = commit("card_link", {
     "Links": [
       {"Base": curHash, "Link": targetHash, "Tag": 'OUT_LINK'},
       {"Base": targetHash, "Link": curHash, "Tag": 'IN_LINK'}
     ]
   })
-  debug("cardLinkHash: " + cardLinkHash)
   return cardLinkHash;
 }
 
@@ -90,18 +90,17 @@ function getCardLists() {
 
   var result = []
   for (var i = 0; i < authorList.length; i++) {
-    getLinks(authorList[i], "AUTHOR_TO_CARD", {Load: true}).map(function(cardHash){
+      getLinks(makeHash('author', authorList[i]), "AUTHOR_TO_CARD", {Load: true}).map(function(card) {
       // TODO: store the first result in memory, don't get it all the time
-      var cardTitle = get(cardHash).title
       result.push({
-        author: authorList[i],
-        cardHash: cardHash,
-        cardTitle: cardTitle
+        author: card.Entry.author,
+        cardHash: card.Hash,
+        cardTitle: card.Entry.title
       })
     })
   }
 
-  return result;
+  return JSON.stringify(result);
 }
 
 // -----------------------------------------------------------------
@@ -115,7 +114,7 @@ function getCardLists() {
 function genesis () {
   var authorHash = commit("author", App.Agent.String)
   commit("author_link", { Links: [
-    {Base: App.Key.Hash, Link: authorHash, Tag: "AUTHORS"}
+    {Base: App.Key.Hash, Link: authorHash, Tag: "AUTHORS"},
   ]});
   return true;
 }
@@ -142,10 +141,9 @@ function validateCommit (entryName, entry, header, pkg, sources) {
       return true;
     case "author_link":
       return true;
+    case "author_card_link":
+      return true;
     case "card_link":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
       return true;
     default:
       // invalid entry name
@@ -165,14 +163,15 @@ function validateCommit (entryName, entry, header, pkg, sources) {
 function validatePut (entryName, entry, header, pkg, sources) {
   switch (entryName) {
     case "card":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
+      // check to determine the user permission commit to the local_chain
+      return true;
+    case "author":
+      return true;
+    case "author_link":
+      return true;
+    case "author_card_link":
       return true;
     case "card_link":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
       return true;
     default:
       // invalid entry name
@@ -193,14 +192,15 @@ function validatePut (entryName, entry, header, pkg, sources) {
 function validateMod (entryName, entry, header, replaces, pkg, sources) {
   switch (entryName) {
     case "card":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
+      // check to determine the user permission commit to the local_chain
+      return true;
+    case "author":
+      return true;
+    case "author_link":
+      return true;
+    case "author_card_link":
       return true;
     case "card_link":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
       return true;
     default:
       // invalid entry name
@@ -219,14 +219,15 @@ function validateMod (entryName, entry, header, replaces, pkg, sources) {
 function validateDel (entryName, hash, pkg, sources) {
   switch (entryName) {
     case "card":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
+      // check to determine the user permission commit to the local_chain
+      return true;
+    case "author":
+      return true;
+    case "author_link":
+      return true;
+    case "author_card_link":
       return true;
     case "card_link":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
       return true;
     default:
       // invalid entry name
@@ -246,14 +247,15 @@ function validateDel (entryName, hash, pkg, sources) {
 function validateLink (entryName, baseHash, links, pkg, sources) {
   switch (entryName) {
     case "card":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
+      // check to determine the user permission commit to the local_chain
+      return true;
+    case "author":
+      return true;
+    case "author_link":
+      return true;
+    case "author_card_link":
       return true;
     case "card_link":
-      // be sure to consider many edge cases for validating
-      // do not just flip this to true without considering what that means
-      // the action will ONLY be successfull if this returns true, so watch out!
       return true;
     default:
       // invalid entry name

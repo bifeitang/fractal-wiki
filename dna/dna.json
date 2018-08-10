@@ -76,6 +76,12 @@
           "Required": true,
           "DataFormat": "links",
           "Sharing": "public"
+        },
+        {
+          "Name": "author_card_link",
+          "Required": true,
+          "DataFormat": "links",
+          "Sharing": "public"
         }
       ],
       "Functions": [

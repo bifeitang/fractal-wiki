@@ -16,6 +16,9 @@
     },
     "card_type": {
       "type": "string"
+    },
+    "author":{
+      "type": "string"
     }
   }
 }

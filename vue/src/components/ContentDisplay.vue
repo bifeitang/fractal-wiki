@@ -22,7 +22,7 @@
 
       <el-main v-if="show">
 
-        <VueTribute :options="cardSelectionList">
+        <VueTribute :options="tributeOptions">
           <el-input type="textarea" :rows="10"
           placeholder="content of the card"
           v-model.lazy="meta.content"></el-input>
@@ -68,7 +68,6 @@
 <script>
 import asyncComponents from './asyncComponents'
 import VueTribute from 'vue-tribute'
-import {MapState} from 'vuex'
 import {fetchJSON, fetchText} from '../api'
 
 export default {
@@ -87,9 +86,11 @@ export default {
       }
     }
   },
-  computed: MapState({
-    'cardSelectionList'
-  }),
+  computed: {
+    tributeOptions() {
+      return this.$store.state.cardSelectionList
+    }
+  },
   data () {
     return {
       meta: this.metadata,
@@ -98,6 +99,7 @@ export default {
       show: true,
       isEdit: false,
       childCards: [],
+      // tributeOptions: this.$store.cardSelectionList
     }
   },
   components: {
@@ -106,9 +108,7 @@ export default {
   },
   created() {
     this.parseContent();
-  },
-  beforeMount () {
-    this.$store.dispatch('LOAD_CARD_LIST')
+    setInterval(this.initCardList, 10000);
   },
   methods: {
     showCard() {
@@ -117,7 +117,7 @@ export default {
     finishEdit() {
       this.isEdit = false;
 
-      fetchJSON('/fn/card/cardCreate', {
+      fetchJSON('fn/card/cardCreate', {
         title: this.meta.title,
         content: this.meta.content,
         card_type: this.meta.selectCardType,
@@ -128,39 +128,45 @@ export default {
     parseContent() {
       var hashList = this.meta.content.match(/[A-Za-z0-9]{46}/g)
       var tempChildList = []
-      fetchText('fn/card/cardRead', String(hashList)).then(result => {
-        var cardContents = result.split("|")
-        var counter = 0
-        var pos = 0
+      if (hashList !== null) {
+        fetchText('fn/card/cardRead', String(hashList)).then(result => {
+          var cardContents = result.split("|")
+          var counter = 0
+          var pos = 0
 
-        this.meta.content.replace(/{{\w{46}}}/g,
-          function(match, offset, s){
-            // push the previous string
-            if (offset !== 0) {
+          this.meta.content.replace(/{{\w{46}}}/g,
+            function(match, offset, s){
+              // push the previous string
+              if (offset !== 0) {
+                tempChildList.push({
+                  content: s.substring(pos, offset),
+                  pureText: true,
+                })
+              }
+              pos = offset + match.length
+
+              let curCard = JSON.parse(cardContents[counter])
               tempChildList.push({
-                content: s.substring(pos, offset),
-                pureText: true,
+                title: curCard.title,
+                content: curCard.content,
+                selectCardType: curCard.card_type,
+                hash: "",
+                pureText: false,
               })
-            }
-            pos = offset + match.length
-
-            let curCard = JSON.parse(cardContents[counter])
-            tempChildList.push({
-              title: curCard.title,
-              content: curCard.content,
-              selectCardType: curCard.card_type,
-              hash: "",
-              pureText: false,
-            })
-            counter++;
-            return match;
-          });
-      });
+              counter++;
+              return match;
+            });
+        });
+      }
       this.childCards = tempChildList;
     },
     editCard(e) {
       e.stopPropagation();
       this.isEdit = !this.isEdit;
+    },
+    initCardList() {
+      // Connect this with listener to the submit => create card => update list
+      this.$store.dispatch('LOAD_CARD_LIST')
     }
   }
 }

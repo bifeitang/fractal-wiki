@@ -3,14 +3,15 @@
   <el-header>Fractal Wiki</el-header>
   <el-container>
     <el-aside width="300px">
-      <!--<ContentDisplay>
-      </ContentDisplay>-->
-      <BasicCard></BasicCard>
+      <ContentDisplay>
+      </ContentDisplay>
+      <!-- <BasicCard></BasicCard> -->
     </el-aside>
 
     <el-container>
       <el-main>
-        <BasicCard></BasicCard>
+        <ContentDisplay></ContentDisplay>
+        <!-- <BasicCard></BasicCard> -->
       </el-main>
     </el-container>
 
@@ -19,12 +20,12 @@
 </template>
 
 <script>
-// import ContentDisplay from './ContentDisplay'
-import BasicCard from './BasicCard'
+import ContentDisplay from './ContentDisplay'
+// import BasicCard from './BasicCard'
 export default {
   components:{
-    // ContentDisplay,
-    BasicCard
+    ContentDisplay,
+    // BasicCard
   }
 }
 </script>

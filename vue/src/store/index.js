@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {fetchJSON, fetchText} from '../api'
+import {fetchJSON} from '../api'
 
 Vue.use(Vuex)
 
@@ -9,20 +9,24 @@ export function createStore(){
     strict: process.env.NODE_ENV !== 'production',
     state: {
       cardSelectionList: {
-        values:[]
+        values: [
+          { key: 'Micheal', value: 'hash' },
+        ]
       },
     },
     actions:{
-      LOAD_CARD_LIST: function({commit}){
-        // Promise(fetch_list).then(commit list data)
-        fetchJSON('/fn/card/getCardLists').then(cardList =>{
+      LOAD_CARD_LIST: ({commit}) => {
+        fetchJSON('fn/card/getCardLists').then(cardList =>{
+          var lists = []
           cardList.map(cardInfo => {
-            console.log(cardInfo)
-            this.append(cardInfo.author + cardInfo.cardTitle, cardInfo.cardHash)
-            commit('SET_CARD_LIST')
+            lists.push({
+              key: cardInfo.cardTitle + cardInfo.author,
+              value: cardInfo.cardHash
+            })
           })
+          commit('SET_CARD_LIST', {lists})
         })
-      },
+      }/*,
       UPDATE_CARD_LIST ({commit}){
         setTimeout(() => {
           commit('APPEND_CARD_LIST')
@@ -31,22 +35,23 @@ export function createStore(){
         // Post().then((response) => {commit()})
         // Only fetch the card not already exist
         const now = Date.now()
-      }
+      }*/
     },
     mutations: {
-      SET_CARD_LIST: (state, {list})=>{
-        // Do card list update here
-        state.cardSelectionList = list
-      },
+      SET_CARD_LIST: (state, {lists})=>{
+        lists.map(item => {
+          state.cardSelectionList.values.push(item)
+        })
+      }/*,
       APPEND_CARD_LIST: (state,{list})=>{
         state.cardSelectionList.append()
-      }
-    },
+      }*/
+    }/*,
     getters: {
       // Allow components access to the data here, do some process and cache the data here
       uniqueCardList: state => {
         return state.cardSelectionList.filter(card => card.filter)
       }
-    }
+    }*/
   })
 }

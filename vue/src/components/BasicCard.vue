@@ -126,7 +126,7 @@ export default {
       var hashList = this.meta.content.match(/[A-Za-z0-9]{46}/g)
       var tempChildList = []
       if (hashList !== null) {
-        fetchText('fn/card/cardRead', hashList).then(result => {
+        fetchText('fn/card/cardRead', String(hashList)).then(result => {
           var cardContents = result.split("|")
           var counter = 0
           var pos = 0

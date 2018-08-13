@@ -44,13 +44,9 @@ function cardRead (cardHash) {
   var hashList = cardHash.split(",")
   var contentList = []
   for (var i = 0; i < hashList.length; i++) {
-    debug(hashList[i])
     var content = get(hashList[i])
-    debug("!!!!!" + content)
     contentList.push(JSON.stringify(content))
   }
-
-  debug("Able to read the content of a new card: " + contentList)
 
   return contentList.join('|');
 }

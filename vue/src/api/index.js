@@ -14,10 +14,7 @@ export const fetchJSON = (fn, data) => {
 export const fetchText = (fn, data) => {
   const url = `${API_BASE}/${fn}`
   return fetch(url, {
-    body: JSON.stringify(data),
-    headers:{
-      'Content-Type': 'application/json'
-    },
+    body: (data),
     method: 'post'
   }).then(r => r.text())
 }

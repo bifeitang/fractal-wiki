@@ -2,6 +2,7 @@
   "name": "vue",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4141",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,7 +11,8 @@
   "dependencies": {
     "tributejs": "^3.3.3",
     "vue": "^2.5.16",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-rc.7",

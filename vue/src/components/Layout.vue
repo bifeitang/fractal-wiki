@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import ContentDisplay from './ContentDisplay'
+// import ContentDisplay from './ContentDisplay'
 import BasicCard from './BasicCard'
 export default {
   components:{
-    ContentDisplay,
+    // ContentDisplay,
     BasicCard
   }
 }

@@ -21,11 +21,17 @@
       </el-header>
 
       <el-main v-if="show">
-        <el-input type="textarea" :rows="10"
-        placeholder="content of the card"
-        v-model.lazy="meta.content"></el-input>
-        <el-button type="success" round v-on:click="finishEdit">Submit</el-button>
+
+        <VueTribute :options="cardSelectionList">
+          <el-input type="textarea" :rows="10"
+          placeholder="content of the card"
+          v-model.lazy="meta.content"></el-input>
+        </VueTribute>
+
       </el-main>
+      <el-footer>
+        <el-button type="success" round v-on:click="finishEdit">Submit</el-button>
+      </el-footer>
     </div>
     <div class="card" type="button" v-if="!isEdit" v-on:dblclick="editCard">
       <el-header style="text-align: center; font-size: 16px">
@@ -61,6 +67,9 @@
 
 <script>
 import asyncComponents from './asyncComponents'
+import VueTribute from 'vue-tribute'
+import {MapState} from 'vuex'
+import {fetchJSON, fetchText} from '../api'
 
 export default {
   name: 'basic-card',
@@ -78,6 +87,9 @@ export default {
       }
     }
   },
+  computed: MapState({
+    'cardSelectionList'
+  }),
   data () {
     return {
       meta: this.metadata,
@@ -89,10 +101,14 @@ export default {
     }
   },
   components: {
-    asyncComponents
+    asyncComponents,
+    VueTribute
   },
   created() {
-    this.parseContent()
+    this.parseContent();
+  },
+  beforeMount () {
+    this.$store.dispatch('LOAD_CARD_LIST')
   },
   methods: {
     showCard() {
@@ -101,29 +117,18 @@ export default {
     finishEdit() {
       this.isEdit = false;
 
-      this.postRequest('cardCreate', JSON.stringify({
+      fetchJSON('/fn/card/cardCreate', {
         title: this.meta.title,
         content: this.meta.content,
         card_type: this.meta.selectCardType,
-      }));
+      })
 
       this.parseContent();
     },
     parseContent() {
-      // Create the pormise
-      const API_BASE = "http://localhost:4141/fn"
-
-      const readCardPromise = (name, data) => {
-        const url = `${API_BASE}/card/${name}`
-        return fetch(url, {
-          method: 'post',
-          body: (data),
-        }).then(r => r.text())
-      }
-
       var hashList = this.meta.content.match(/[A-Za-z0-9]{46}/g)
       var tempChildList = []
-      readCardPromise('cardRead', String(hashList)).then(result => {
+      fetchText('fn/card/cardRead', String(hashList)).then(result => {
         var cardContents = result.split("|")
         var counter = 0
         var pos = 0
@@ -152,19 +157,6 @@ export default {
           });
       });
       this.childCards = tempChildList;
-    },
-    postRequest(funName, funContents) {
-      const API_BASE = "http://localhost:4141/fn"
-
-      const endpoint = (name, data) => {
-        const url = `${API_BASE}/card/${name}`
-        return fetch(url, {
-          method: 'post',
-          body: (data),
-        }).then(r => r.json())
-      }
-
-      endpoint(funName, funContents);
     },
     editCard(e) {
       e.stopPropagation();

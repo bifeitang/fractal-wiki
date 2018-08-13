@@ -68,6 +68,7 @@
 <script>
 import asyncComponents from './asyncComponents'
 import VueTribute from 'vue-tribute'
+import {fetchJSON, fetchText} from '../api'
 
 export default {
   name: 'basic-card',
@@ -113,70 +114,48 @@ export default {
     finishEdit() {
       this.isEdit = false;
 
-      this.postRequest('cardCreate', JSON.stringify({
+      fetchJSON('fn/card/cardCreate', {
         title: this.meta.title,
         content: this.meta.content,
         card_type: this.meta.selectCardType,
-      }));
+      })
 
       this.parseContent();
     },
     parseContent() {
-      // Create the pormise
-      const API_BASE = "http://localhost:4141/fn"
-
-      const readCardPromise = (name, data) => {
-        const url = `${API_BASE}/card/${name}`
-        return fetch(url, {
-          method: 'post',
-          body: (data),
-        }).then(r => r.text())
-      }
-
       var hashList = this.meta.content.match(/[A-Za-z0-9]{46}/g)
       var tempChildList = []
-      readCardPromise('cardRead', String(hashList)).then(result => {
-        var cardContents = result.split("|")
-        var counter = 0
-        var pos = 0
+      if (hashList !== null) {
+        fetchText('fn/card/cardRead', hashList).then(result => {
+          var cardContents = result.split("|")
+          var counter = 0
+          var pos = 0
 
-        this.meta.content.replace(/{{\w{46}}}/g,
-          function(match, offset, s){
-            // push the previous string
-            if (offset !== 0) {
+          this.meta.content.replace(/{{\w{46}}}/g,
+            function(match, offset, s){
+              // push the previous string
+              if (offset !== 0) {
+                tempChildList.push({
+                  content: s.substring(pos, offset),
+                  pureText: true,
+                })
+              }
+              pos = offset + match.length
+
+              let curCard = JSON.parse(cardContents[counter])
               tempChildList.push({
-                content: s.substring(pos, offset),
-                pureText: true,
+                title: curCard.title,
+                content: curCard.content,
+                selectCardType: curCard.card_type,
+                hash: "",
+                pureText: false,
               })
-            }
-            pos = offset + match.length
-
-            let curCard = JSON.parse(cardContents[counter])
-            tempChildList.push({
-              title: curCard.title,
-              content: curCard.content,
-              selectCardType: curCard.card_type,
-              hash: "",
-              pureText: false,
-            })
-            counter++;
-            return match;
-          });
-      });
-      this.childCards = tempChildList;
-    },
-    postRequest(funName, funContents) {
-      const API_BASE = "http://localhost:4141/fn"
-
-      const endpoint = (name, data) => {
-        const url = `${API_BASE}/card/${name}`
-        return fetch(url, {
-          method: 'post',
-          body: (data),
-        }).then(r => r.json())
+              counter++;
+              return match;
+            });
+        });
       }
-
-      endpoint(funName, funContents);
+      this.childCards = tempChildList;
     },
     editCard(e) {
       e.stopPropagation();
@@ -184,17 +163,7 @@ export default {
     },
     initCardList() {
       // Connect this with listener to the submit => create card => update list
-      const API_BASE = "http://localhost:4141/fn"
-
-      const readCardPromise = (name, data) => {
-        const url = `${API_BASE}/card/${name}`
-        return fetch(url, {
-          method: 'post',
-          body: (data),
-        }).then(r => r.json());
-      }
-
-      readCardPromise("getCardLists").then(cardList =>{
+      fetchJSON('fn/card/getCardLists').then(cardList =>{
         cardList.map(cardInfo => {
           console.log(cardInfo)
           this.append(cardInfo.author + cardInfo.cardTitle, cardInfo.cardHash)

@@ -23,9 +23,11 @@
       <el-main v-if="show">
 
         <VueTribute :options="tributeOptions">
-          <el-input type="textarea" :rows="10"
+          <textarea name="name" rows="8" cols="80"
           placeholder="content of the card"
-          v-model.lazy="meta.content"></el-input>
+          v-model.lazy="meta.content"
+          @keyup.50="updateCardList"
+          ></textarea>
         </VueTribute>
 
       </el-main>
@@ -108,7 +110,7 @@ export default {
   },
   created() {
     this.parseContent();
-    setInterval(this.initCardList, 10000);
+    this.initCardList();
   },
   methods: {
     showCard() {
@@ -167,6 +169,9 @@ export default {
     initCardList() {
       // Connect this with listener to the submit => create card => update list
       this.$store.dispatch('LOAD_CARD_LIST')
+    },
+    updateCardList() {
+      this.$store.dispatch('UPDATE_CARD_LIST')
     }
   }
 }

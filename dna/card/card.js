@@ -16,11 +16,13 @@ function cardCreate (params) {
   }*/
   // Is there necessarily link the card to a certain position of the tree?
 
+  var timestamp = Date.now()
   var card = {
     title: params.title,
     author: App.Agent.String,
     content: params.content,
-    card_type: params.card_type
+    card_type: params.card_type,
+    timestamp: timestamp,
   }
 
   var cardHash = commit("card", card)
@@ -89,16 +91,24 @@ function getCardLists() {
   var result = []
   for (var i = 0; i < authorList.length; i++) {
       getLinks(makeHash('author', authorList[i]), "AUTHOR_TO_CARD", {Load: true}).map(function(card) {
-      // TODO: store the first result in memory, don't get it all the time
-      result.push({
-        author: card.Entry.author,
-        cardHash: card.Hash,
-        cardTitle: card.Entry.title
-      })
+        result.push({
+          author: card.Entry.author,
+          cardHash: card.Hash,
+          cardTitle: card.Entry.title,
+          timestamp: card.Entry.timestamp,
+        })
     })
   }
 
   return JSON.stringify(result);
+}
+
+function updateCardList(preTime) {
+  function timefilter(item) {
+    return item.timestamp > preTime
+  }
+  var updateList = JSON.parse(getCardLists()).filter(timefilter)
+  return JSON.stringify(updateList);
 }
 
 // -----------------------------------------------------------------

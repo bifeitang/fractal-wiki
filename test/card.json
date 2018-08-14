@@ -13,6 +13,14 @@
       "Exposure": "public"
     },
     {
+      "Convey": "Get cards List",
+      "Zome": "card",
+      "FnName": "getCardLists",
+      "Input": "",
+      "Output": "",
+      "Exposure": "public"
+    },
+    {
       "Convey": "Get the content of the card through cardRead",
       "Zome": "card",
       "FnName": "cardRead",

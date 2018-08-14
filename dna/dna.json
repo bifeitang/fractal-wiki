@@ -114,6 +114,11 @@
           "Name": "getCardLists",
           "CallingType": "string",
           "Exposure": "public"
+        },
+        {
+          "Name": "updateCardList",
+          "CallingType": "string",
+          "Exposure": "public"
         }
       ]
     }

@@ -19,6 +19,9 @@
     },
     "author":{
       "type": "string"
+    },
+    "timestamp":{
+      "type": "integer"
     }
   }
 }

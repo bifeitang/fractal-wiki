@@ -12,7 +12,11 @@ export function createStore(){
     state: {
       // TODO: Better to use a Hash map here and then transfer it into the desired list
       cardSelectionList: {
-        values: []
+        trigger: '@',
+        selectTemplate: function (item) {
+          return '{{' + item.original.value + "}}";
+        },
+        values: [],
       },
       updateTime: 0
     },

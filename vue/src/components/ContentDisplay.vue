@@ -23,7 +23,8 @@
       <el-main v-if="show">
 
         <VueTribute :options="tributeOptions">
-          <textarea name="name" rows="8" cols="80"
+          <textarea class="textarea"
+          rows="8"
           placeholder="content of the card"
           v-model.lazy="meta.content"
           @keyup.50="updateCardList"
@@ -101,7 +102,6 @@ export default {
       show: true,
       isEdit: false,
       childCards: [],
-      // tributeOptions: this.$store.cardSelectionList
     }
   },
   components: {
@@ -181,6 +181,11 @@ export default {
   .text {
     font-size: 16px;
     text-align: left;
+  }
+
+  .textarea {
+    width: 100%;
+    height: 100%;
   }
 
   .card {

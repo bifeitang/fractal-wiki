@@ -40,7 +40,7 @@
           </el-upload>
         </div>
 
-        <VueTribute :options="tributeOptions" v-else-if="meta.selectCardType === 'Edit'">
+        <VueTribute :options="tributeOptions" v-else>
           <textarea class="textarea"
           rows="8"
           placeholder="content of the card"
@@ -115,7 +115,7 @@ export default {
   data () {
     return {
       meta: this.metadata,
-      cardTypes: ["CSS", "JavaScript", "Plain", "Edit", "HTML", "Markdown", "Image"],
+      cardTypes: ["CSS", "JavaScript", "Plain", "HTML", "Markdown", "Image"],
       action: 'unfold',
       show: true,
       isEdit: false,

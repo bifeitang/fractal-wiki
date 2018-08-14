@@ -54,9 +54,25 @@ export function createStore(){
     },
     mutations: {
       SET_CARD_LIST: (state, {lists})=>{
-        lists.map(item => {
-          state.cardSelectionList.values.push(item)
+        if (lists.length === 0) {
+          return;
+        }
+        var listToMap = new Map(state.cardSelectionList.values.map(
+          i => [i.key, i.value]
+        ))
+
+        lists.map(i => {
+          listToMap.set(i.key, i.value)
         })
+
+        const newCardList =  Array.from(listToMap).map(i => {
+          return {
+            key: i[0],
+            value: i[1]
+          }
+        })
+        state.cardSelectionList.values = newCardList
+        console.log(state.cardSelectionList.values)
       },
       UPDATE_TIME: (state) => {
         state.updateTime = Date.now()

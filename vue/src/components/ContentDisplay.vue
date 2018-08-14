@@ -22,7 +22,25 @@
 
       <el-main v-if="show">
 
-        <VueTribute :options="tributeOptions">
+
+        <div v-if="meta.selectCardType === 'Markdown'">
+          <markdown-editor v-model="meta.content"></markdown-editor>
+        </div>
+
+        <div class="image" v-else-if="meta.selectCardType === 'Image'">
+          <el-upload
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :file-list="fileList2"
+            list-type="picture">
+            <el-button size="small" type="primary">click to upload</el-button>
+            <div slot="tip" class="el-upload__tip">Only jpg/png，no larger than 500kb</div>
+          </el-upload>
+        </div>
+
+        <VueTribute :options="tributeOptions" v-else-if="meta.selectCardType === 'Edit'">
           <textarea class="textarea"
           rows="8"
           placeholder="content of the card"
@@ -69,8 +87,8 @@
 </template>
 
 <script>
-import asyncComponents from './asyncComponents'
 import VueTribute from 'vue-tribute'
+import markdownEditor from 'vue-simplemde/src/markdown-editor'
 import {fetchJSON, fetchText} from '../api'
 
 export default {
@@ -97,16 +115,19 @@ export default {
   data () {
     return {
       meta: this.metadata,
-      cardTypes: ["CSS", "JavaScript", "Plain", "Edit", "HTML"],
+      cardTypes: ["CSS", "JavaScript", "Plain", "Edit", "HTML", "Markdown", "Image"],
       action: 'unfold',
       show: true,
       isEdit: false,
       childCards: [],
+      editTime: 0,
+      cardHash: "",
+      fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
     }
   },
   components: {
-    asyncComponents,
-    VueTribute
+    VueTribute,
+    markdownEditor
   },
   created() {
     this.parseContent();
@@ -119,12 +140,26 @@ export default {
     finishEdit() {
       this.isEdit = false;
 
-      fetchJSON('fn/card/cardCreate', {
-        title: this.meta.title,
-        content: this.meta.content,
-        card_type: this.meta.selectCardType,
-      })
+      if (this.editTime === 0) {
+        fetchJSON('fn/card/cardCreate', {
+          title: this.meta.title,
+          content: this.meta.content,
+          card_type: this.meta.selectCardType,
+        }).then(hash => {
+          this.cardHash = hash
+        })
+      } else {
+        fetchJSON('fn/card/cardUpdate', {
+          title: this.meta.title,
+          content: this.meta.content,
+          card_type: this.meta.selectCardType,
+          cardHash: this.cardHash
+        }).then(hash => {
+          this.cardHash = hash
+        })
+      }
 
+      this.editTime++;
       this.parseContent();
     },
     parseContent() {
@@ -172,6 +207,12 @@ export default {
     },
     updateCardList() {
       this.$store.dispatch('UPDATE_CARD_LIST')
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
     }
   }
 }
@@ -199,4 +240,9 @@ export default {
     text-align: center;
     line-height: 60px;
   }
+</style>
+
+<style>
+  @import '~simplemde/dist/simplemde.min.css';
+  @import '~github-markdown-css';
 </style>

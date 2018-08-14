@@ -54,15 +54,16 @@ function cardRead (cardHash) {
 }
 
 function cardUpdate (params) {
-
+  var timestamp = Date.now()
   var updateCard = {
     title: params.title,
     content: params.content,
     card_type: params.card_type,
-    author: App.Agent.String
+    author: App.Agent.String,
+    timestamp: timestamp,
   }
-  var cardOutHash = update("card", updateCard, params.cardHash);
-  return cardOutHash;
+  var cardNewHash = update("card", updateCard, params.cardHash);
+  return cardNewHash;
 }
 
 function cardDelete (cardHash) {

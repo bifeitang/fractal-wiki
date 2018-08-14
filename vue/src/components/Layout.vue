@@ -17,14 +17,17 @@
 
   </el-container>
 </el-container>
+
 </template>
 
 <script>
 import ContentDisplay from './ContentDisplay'
+import Markdown from './MarkdownCard'
 // import BasicCard from './BasicCard'
 export default {
   components:{
     ContentDisplay,
+    Markdown,
     // BasicCard
   }
 }

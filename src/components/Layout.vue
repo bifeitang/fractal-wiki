@@ -1,6 +1,9 @@
 <template lang="html">
   <el-container>
   <el-header>Fractal Wiki</el-header>
+
+  <SearchCard></SearchCard>
+
   <el-container>
     <el-aside width="300px">
       <ContentDisplay>
@@ -22,10 +25,12 @@
 
 <script>
 import ContentDisplay from './ContentDisplay'
+import SearchCard from './SearchCard'
 // import BasicCard from './BasicCard'
 export default {
   components:{
     ContentDisplay,
+    SearchCard,
     // BasicCard
   }
 }

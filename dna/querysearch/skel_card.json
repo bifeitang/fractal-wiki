@@ -1,0 +1,14 @@
+{
+  "name": "skel_card",
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "integer"
+    }
+  },
+  "indexFields": [
+    {
+      "timestamp": 1
+    }
+  ]
+}

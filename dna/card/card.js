@@ -9,6 +9,40 @@ function anchor(anchorType, anchorText) {
 // -----------------------------------------------------------------
 //  Public Zome Function
 // -----------------------------------------------------------------
+function fieldCardSearch(params){
+  if (params.field === "all") {
+    var rankedPosts = JSON.parse(call('querysearch', 'searchQS', {
+      queryString: params.keywords,
+      entryType: "card"
+    }));
+
+    var cardsList = rankedPosts.map(ele => {
+      return {Entry: get(ele.Hash), Weight: get(ele.Weight)};
+    })
+
+    return cardsList;
+  } /*else {
+
+    if (params.field === null) {
+      return false;
+    }
+
+    var cardHashes = call('querysearch', 'queryQS', {
+      entryType: "card",
+      queryOptions: {
+        Field: params.field,
+        Load: true
+      }
+    })
+    var cardsList = JSON.parse(cardHashes).map(hash => {
+      return get(hash)
+    })
+
+    return cardsList;
+  }*/
+
+  return null;
+}
 
 function cardCreate (params) {
   /*if (!params.nodeHash) {
@@ -26,6 +60,9 @@ function cardCreate (params) {
   }
 
   var cardHash = commit("card", card)
+
+  call('querysearch', 'indexQS', {entryType: "card", entryHash: cardHash}))
+  call('querysearch', 'indexKeywordQS', {entryType: "card", entryHash: cardHash})
 
   commit('author_card_link', {
     "Links": [
@@ -62,6 +99,10 @@ function cardUpdate (params) {
     author: App.Agent.String,
     timestamp: timestamp,
   }
+
+  call('querysearch', 'indexQS', {entryType: "card", entryHash: updateCard}))
+  call('querysearch', 'indexKeywordQS', {entryType: "card", entryHash: updateCard})
+
   var cardNewHash = update("card", updateCard, params.cardHash);
   return cardNewHash;
 }

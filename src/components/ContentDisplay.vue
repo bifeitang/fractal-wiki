@@ -165,6 +165,8 @@ export default {
           card_type: this.meta.selectCardType,
         }).then(hash => {
           this.cardHash = hash
+        }).catch( error => {
+          console.log(error)
         })
       } else {
         fetchJSON('fn/card/cardUpdate', {

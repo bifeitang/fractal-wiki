@@ -11,16 +11,25 @@ function anchor(anchorType, anchorText) {
 // -----------------------------------------------------------------
 function fieldCardSearch(params){
   if (params.field === "all") {
+    debug("!!!!" + params.keywords)
     var rankedPosts = JSON.parse(call('querysearch', 'searchQS', {
       queryString: params.keywords,
       entryType: "card"
     }));
 
-    var cardsList = rankedPosts.map(ele => {
-      return {Entry: get(ele.Hash), Weight: get(ele.Weight)};
-    })
+    debug("!!!! Got rankedPosts" + JSON.stringify(rankedPosts))
+    var cardsList = []
 
-    return cardsList;
+    rankedPosts.map(function(ele) {
+      debug(get(ele.Hash))
+      cardsList.push(JSON.stringify({
+        Card: get(ele.Hash),
+        Weight: ele.Weight,
+      }))
+    })
+    debug("!!!" + cardsList)
+
+    return cardsList.join("|");
   } /*else {
 
     if (params.field === null) {
@@ -61,7 +70,7 @@ function cardCreate (params) {
 
   var cardHash = commit("card", card)
 
-  call('querysearch', 'indexQS', {entryType: "card", entryHash: cardHash}))
+  call('querysearch', 'indexQS', {entryType: "card", entryHash: cardHash})
   call('querysearch', 'indexKeywordQS', {entryType: "card", entryHash: cardHash})
 
   commit('author_card_link', {
@@ -100,10 +109,9 @@ function cardUpdate (params) {
     timestamp: timestamp,
   }
 
-  call('querysearch', 'indexQS', {entryType: "card", entryHash: updateCard}))
-  call('querysearch', 'indexKeywordQS', {entryType: "card", entryHash: updateCard})
-
   var cardNewHash = update("card", updateCard, params.cardHash);
+  call('querysearch', 'indexQS', {entryType: "card", entryHash: cardNewHash})
+  call('querysearch', 'indexKeywordQS', {entryType: "card", entryHash: cardNewHash})
   return cardNewHash;
 }
 

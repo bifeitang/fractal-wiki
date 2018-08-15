@@ -4,6 +4,7 @@
   style=" border: 1px solid #eee"
   class="is-hover-shadow"
   v-if="!meta.pureText">
+    <!-- In the Edit Mode -->
     <div class="card" type="button" v-if="isEdit" @dblclick="editCard">
       <el-header style="text-align: center; font-size: 16px">
         <el-row :gutter="20">
@@ -24,7 +25,7 @@
 
 
         <div v-if="meta.selectCardType === 'Markdown'">
-          <markdown-editor v-model="meta.content"></markdown-editor>
+          <markdown-editor v-model="meta.content" ref="markdownEditor"></markdown-editor>
         </div>
 
         <div class="image" v-else-if="meta.selectCardType === 'Image'">
@@ -48,37 +49,47 @@
           @keyup.50="updateCardList"
           ></textarea>
         </VueTribute>
-
       </el-main>
+
       <el-footer>
         <el-button type="success" round v-on:click="finishEdit">Submit</el-button>
       </el-footer>
     </div>
-    <div class="card" type="button" v-if="!isEdit" v-on:dblclick="editCard">
-      <el-header style="text-align: center; font-size: 16px">
-        <el-row :gutter="20">
-          <el-col :span="2" style="margin-top: 10px"><el-button
-          type="primary"
-          size="middle"
-          icon="el-icon-arrow-down"
-          style="float: left"
-          circle
-          autofocus
-          v-on:click="showCard"></el-button></el-col>
-          <el-col :span="22">
-            <span class="text">{{meta.title}}</span>
-          </el-col>
-        </el-row>
-      </el-header>
+    <!-- In the displaying mode -->
+    <div class="card" type="button" v-if="!isEdit" @dblclick="editCard">
+      <div v-if="meta.selectCardType === 'Markdown'">
+          <div v-html="compiledMarkdown" class="markdown-body"></div>
+      </div>
+      <div v-else-if="meta.selectCardType === 'Image'">
 
-      <el-main v-if="show">
-        <div v-if="childCards.length">
-          <basic-card v-for="child in childCards" :metadata="child"></basic-card>
-        </div>
-        <div v-else>
-          {{meta.content}}
-        </div>
-      </el-main>
+      </div>
+      <div v-else>
+        <el-header style="text-align: center; font-size: 16px">
+          <el-row :gutter="20">
+            <el-col :span="2" style="margin-top: 10px"><el-button
+            type="primary"
+            size="middle"
+            icon="el-icon-arrow-down"
+            style="float: left"
+            circle
+            autofocus
+            v-on:click="showCard"></el-button></el-col>
+            <el-col :span="22">
+              <span class="text">{{meta.title}}</span>
+            </el-col>
+          </el-row>
+        </el-header>
+
+        <el-main v-if="show">
+          <div v-if="childCards.length">
+            <basic-card v-for="child in childCards" :metadata="child"></basic-card>
+          </div>
+          <div v-else>
+            {{meta.content}}
+          </div>
+        </el-main>
+      </div>
+
     </div>
   </el-container>
   <div v-else>
@@ -110,6 +121,13 @@ export default {
   computed: {
     tributeOptions() {
       return this.$store.state.cardSelectionList
+    },
+    simplemde() {
+      return this.$refs.markdownEditor.simplemde
+    },
+    compiledMarkdown() {
+      console.log("Inside this function")
+      return this.simplemde.markdown(this.meta.content)
     }
   },
   data () {

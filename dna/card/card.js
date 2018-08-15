@@ -10,14 +10,13 @@ function anchor(anchorType, anchorText) {
 //  Public Zome Function
 // -----------------------------------------------------------------
 function fieldCardSearch(params){
+
   if (params.field === "all") {
-    debug("!!!!" + params.keywords)
     var rankedPosts = JSON.parse(call('querysearch', 'searchQS', {
       queryString: params.keywords,
       entryType: "card"
     }));
 
-    debug("!!!! Got rankedPosts" + JSON.stringify(rankedPosts))
     var cardsList = []
 
     rankedPosts.map(function(ele) {
@@ -27,9 +26,8 @@ function fieldCardSearch(params){
         Weight: ele.Weight,
       }))
     })
-    debug("!!!" + cardsList)
 
-    return cardsList.join("|");
+    return cardsList;
   } /*else {
 
     if (params.field === null) {

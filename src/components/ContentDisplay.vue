@@ -23,7 +23,6 @@
 
       <el-main v-if="show">
 
-
         <div v-if="meta.selectCardType === 'Markdown'">
           <markdown-editor v-model="meta.content" ref="markdownEditor"></markdown-editor>
         </div>
@@ -55,6 +54,7 @@
         <el-button type="success" round v-on:click="finishEdit">Submit</el-button>
       </el-footer>
     </div>
+
     <!-- In the displaying mode -->
     <div class="card" type="button" v-if="!isEdit" @dblclick="editCard">
       <div v-if="meta.selectCardType === 'Markdown'">
@@ -92,6 +92,7 @@
 
     </div>
   </el-container>
+
   <div v-else>
     {{meta.content}}
   </div>
@@ -116,6 +117,10 @@ export default {
           pureText: false,
         }
       }
+    },
+    parentShow: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -135,11 +140,11 @@ export default {
       meta: this.metadata,
       cardTypes: ["CSS", "JavaScript", "Plain", "HTML", "Markdown", "Image"],
       action: 'unfold',
-      show: true,
       isEdit: false,
       childCards: [],
       editTime: 0,
       cardHash: "",
+      show: this.parentShow,
       fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
     }
   },

@@ -58,7 +58,14 @@
     <!-- In the displaying mode -->
     <div class="card" type="button" v-if="!isEdit" @dblclick="editCard">
       <div v-if="meta.selectCardType === 'Markdown'">
+        <!-- For the child, the compiledMarkdown haven't been initialized
+            Want to find a way to make sure the data is already changed to  -->
+        <div v-if="isReferableMarkdown">
           <div v-html="compiledMarkdown" class="markdown-body"></div>
+        </div>
+        <div v-else>
+          <div v-html="meta.content" class="markdown-body"></div>
+        </div>
       </div>
       <div v-else-if="meta.selectCardType === 'Image'">
 
@@ -131,8 +138,16 @@ export default {
       return this.$refs.markdownEditor.simplemde
     },
     compiledMarkdown() {
-      console.log("Inside this function")
+      console.log("Inside the Markdown compile function")
       return this.simplemde.markdown(this.meta.content)
+    },
+    isReferableMarkdown() {
+      console.log("!!!???" +this.$refs.markdownEditor)
+      if (typeof(this.$refs.markdownEditor) == "undefined") {
+        return false;
+      } else {
+        return true;
+      }
     }
   },
   data () {
@@ -162,7 +177,9 @@ export default {
     },
     finishEdit() {
       this.isEdit = false;
-
+      if (this.meta.selectCardType === 'Markdown') {
+        this.meta.content = this.simplemde.markdown(this.meta.content)
+      }
       if (this.editTime === 0) {
         fetchJSON('fn/card/cardCreate', {
           title: this.meta.title,

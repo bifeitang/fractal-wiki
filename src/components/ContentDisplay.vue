@@ -1,18 +1,17 @@
 <template lang="html">
   <!-- Edit Mode -->
   <el-container
-  style=" border: 1px solid #eee"
   class="is-hover-shadow"
   v-if="!meta.pureText">
     <!-- In the Edit Mode -->
     <div class="card" type="button" v-if="isEdit" @dblclick="editCard">
-      <el-header style="text-align: center; font-size: 16px">
-        <el-row :gutter="20">
-          <el-col :span="4">CardName:</el-col>
-          <el-col :span="4">
-            <el-input v-model="meta.title" placeholder="card_name"></el-input>
+      <el-header class="title-edit" style="text-align: center; font-size: 16px">
+        <el-row :gutter="10">
+          <el-col :span="6" class="card-title">Card Name:</el-col>
+          <el-col :span="6">
+            <el-input v-model="meta.title" class="card-title" placeholder="Card Name"></el-input>
           </el-col>
-          <el-col :span="16">
+          <el-col :span="6">
             <el-select v-model="meta.selectCardType" placeholder="Card Type">
               <el-option v-for="type in cardTypes" :key="type" :value="type">
               </el-option>
@@ -21,8 +20,7 @@
         </el-row>
       </el-header>
 
-      <el-main v-if="show">
-
+      <el-main class="main-card" v-if="show">
         <div v-if="meta.selectCardType === 'Markdown'">
           <markdown-editor v-model="meta.content" ref="markdownEditor"></markdown-editor>
         </div>
@@ -51,7 +49,7 @@
       </el-main>
 
       <el-footer>
-        <el-button type="success" round v-on:click="finishEdit">Submit</el-button>
+        <el-button class="submit-btn" type="success" round v-on:click="finishEdit">Submit</el-button>
       </el-footer>
     </div>
 
@@ -71,23 +69,27 @@
 
       </div>
       <div v-else>
-        <el-header style="text-align: center; font-size: 16px">
+        <el-header class="title-closed" style="text-align: center; font-size: 16px">
           <el-row :gutter="20">
-            <el-col :span="2" style="margin-top: 10px"><el-button
-            type="primary"
-            size="middle"
-            icon="el-icon-arrow-down"
-            style="float: left"
-            circle
-            autofocus
-            v-on:click="showCard"></el-button></el-col>
+            <el-col :span="2" style="margin-top: 10px">
+              <el-button
+                class="down-btn"
+                type="primary"
+                size="middle"
+                icon="el-icon-arrow-down"
+                style="float: left"
+                circle
+                autofocus
+                v-on:click="showCard">
+              </el-button>
+            </el-col>
             <el-col :span="22">
               <span class="text">{{meta.title}}</span>
             </el-col>
           </el-row>
         </el-header>
 
-        <el-main v-if="show">
+        <el-main class="main-card" v-if="show">
           <div v-if="childCards.length">
             <basic-card v-for="child in childCards" :metadata="child"></basic-card>
           </div>
@@ -117,8 +119,8 @@ export default {
       type: Object,
       default () {
         return {
-          title: 'default title',
-          content: 'default content',
+          title: 'Your Title',
+          content: 'Your Content',
           selectCardType: 'Plain',
           hash: "",
           pureText: false,
@@ -138,7 +140,7 @@ export default {
       return this.$refs.markdownEditor.simplemde
     },
     compiledMarkdown() {
-      console.log("Inside the Markdown compile function")
+      console.log("Inside the markdown function")
       return this.simplemde.markdown(this.meta.content)
     },
     isReferableMarkdown() {
@@ -262,13 +264,24 @@ export default {
 
 <style lang="css">
   .text {
-    font-size: 16px;
-    text-align: left;
+    font-size: 1.25em;
+    font-weight: 400;
+    text-align: middle;
   }
 
   .textarea {
-    width: 100%;
+    width: 600px;
     height: 100%;
+    background: #cccdd6;
+    border: 1px solid #dcdfe6;
+    border-radius: 2px;
+    font-family: 'Goudy Bookletter 1911', Helvetica, Arial, serif, sans-serif;
+    padding: 2px;
+  }
+
+  el-main.main-card {
+    position: absolute;
+    left: 2px;
   }
 
   .card {
@@ -277,11 +290,49 @@ export default {
   }
 
   .el-header {
+    padding: 0 0 0 8px;
     background-color: #B3C0D1;
     color: #333;
     text-align: center;
     line-height: 60px;
+    overflow: visible;
   }
+
+  .title-edit {
+    font-size: 1em !important;
+  }
+
+  .title-closed {
+    font-size: 1.2em !important;
+  }
+
+  .card-title {
+    font-weight: bold;
+    font-size: 1.5em;
+  }
+
+  .down-btn {
+    border-radius: 15px;
+    background: #5d837d !important;
+    border-color: #23423d !important;
+  }
+
+  .submit-btn {
+    background: #5d837d !important;
+    border-color: #23423d !important;
+    position: relative;
+    right: 0;
+  }
+
+  .el-select-dropdown__list {
+    background: #cccdd6;
+  }
+
+  input.el-input__inner {
+    background-color: #cccdd6;
+  }
+
+
 </style>
 
 <style>

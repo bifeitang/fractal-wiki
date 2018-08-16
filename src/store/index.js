@@ -47,7 +47,7 @@ export function createStore(){
           var lists = []
           cardList.map(cardInfo => {
             lists.push({
-              key: cardInfo.cardTitle + cardInfo.author,
+              key: cardInfo.cardTitle + " (" + cardInfo.author + ")",
               value: cardInfo.cardHash
             })
           })
@@ -62,7 +62,7 @@ export function createStore(){
           var lists = []
           cardList.map(cardInfo => {
             lists.push({
-              key: cardInfo.cardTitle + cardInfo.author,
+              key: cardInfo.cardTitle + " (" + cardInfo.author + ")",
               value: cardInfo.cardHash
             })
           })

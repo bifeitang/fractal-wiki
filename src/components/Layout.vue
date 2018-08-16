@@ -32,7 +32,6 @@ export default {
 <style lang="css">
   .page-header {
     height: 75px !important;
-    font-family: 'Goudy Bookletter 1911', serif;
     font-weight: bold;
     font-size: 3em;
     border: 5px double #44444d;

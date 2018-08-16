@@ -289,12 +289,7 @@ export default {
     background: #cccdd6;
     border: 1px solid #dcdfe6;
     border-radius: 2px;
-    font-family: 'Goudy Bookletter 1911', Helvetica, Arial, serif, sans-serif;
     padding: 2px;
-  }
-
-  .el-main {
-    line-height: 160px;
   }
 
   .card {
@@ -340,6 +335,28 @@ export default {
 
   input.el-input__inner {
     background-color: #cccdd6;
+  }
+
+  .tribute-container {
+    background: white;
+    margin-top: 0.5em;
+    padding: 0;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .tribute-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tribute-container li {
+    padding: 2px 10px;
+    cursor: pointer;
+  }
+
+  .tribute-container li:hover {
+    background: #ccc;
   }
 
 

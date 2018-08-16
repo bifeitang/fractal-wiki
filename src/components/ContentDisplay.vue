@@ -289,7 +289,8 @@ export default {
     background: #cccdd6;
     border: 1px solid #dcdfe6;
     border-radius: 2px;
-    padding: 2px;
+    padding: 10px;
+    box-sizing: border-box;
   }
 
   .card {

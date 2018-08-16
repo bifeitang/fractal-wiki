@@ -37,7 +37,4 @@ input, textarea, select, button {
   font-size: 14px;
 }
 
-.textarea {
-  padding: 10px;
-}
 </style>

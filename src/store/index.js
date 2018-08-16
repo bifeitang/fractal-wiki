@@ -95,6 +95,13 @@ export function createStore(){
       UPDATE_TIME: (state) => {
         state.updateTime = Date.now()
       },
+      ADD_TREE_NODE: (state, {treeList, indices, newNode}) => {
+          let parent = treeList[indices.shift()];
+          indices.forEach((i) => {
+            parent = parent.children[i];
+          });
+          parent.children.push(newNode);
+      }
     }
   })
 }

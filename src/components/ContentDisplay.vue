@@ -5,13 +5,14 @@
   v-if="!meta.pureText">
     <!-- In the Edit Mode -->
     <div class="card" type="button" v-if="isEdit" @dblclick="editCard">
-      <el-header class="title-edit" style="text-align: center; font-size: 16px">
-        <el-row :gutter="10">
-          <el-col :span="6" class="card-title">Card Name:</el-col>
-          <el-col :span="6">
+      <el-header style="text-align: center; font-size: 16px">
+        <el-row :gutter="20">
+          <el-col :span="4" class="card-title">Title:</el-col>
+          <el-col :span="8">
             <el-input v-model="meta.title" class="card-title" placeholder="Card Name"></el-input>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4" class="card-title">Type:</el-col>
+          <el-col :span="8">
             <el-select v-model="meta.selectCardType" placeholder="Card Type">
               <el-option v-for="type in cardTypes" :key="type" :value="type">
               </el-option>
@@ -20,7 +21,7 @@
         </el-row>
       </el-header>
 
-      <el-main class="main-card" v-if="show">
+      <el-main v-if="show">
         <div v-if="meta.selectCardType === 'Markdown'">
           <markdown-editor v-model="meta.content" ref="markdownEditor"></markdown-editor>
         </div>
@@ -91,7 +92,7 @@
 
         <el-main class="main-card" v-if="show">
           <div v-if="childCards.length">
-            <basic-card v-for="child in childCards" :metadata="child"></basic-card>
+            <basic-card v-for="child in childCards" :metadata="child" :depth="depth+1"></basic-card>
           </div>
           <div v-else>
             {{meta.content}}
@@ -124,12 +125,17 @@ export default {
           selectCardType: 'Plain',
           hash: "",
           pureText: false,
+          index: 0,
         }
       }
     },
     parentShow: {
       type: Boolean,
       default: true
+    },
+    depth: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
@@ -144,7 +150,6 @@ export default {
       return this.simplemde.markdown(this.meta.content)
     },
     isReferableMarkdown() {
-      console.log("!!!???" +this.$refs.markdownEditor)
       if (typeof(this.$refs.markdownEditor) == "undefined") {
         return false;
       } else {
@@ -172,10 +177,16 @@ export default {
   created() {
     this.parseContent();
     this.initCardList();
+    this.createTreeNode();
   },
   methods: {
     showCard() {
       this.show = !this.show;
+    },
+    createTreeNode() {
+      console.log("!!!!" + this.meta.title)
+      console.log("!!!! Depth" + this.depth)
+      console.log("!!!! Index" + this.meta.index)
     },
     finishEdit() {
       this.isEdit = false;
@@ -214,6 +225,7 @@ export default {
           var cardContents = result.split("|")
           var counter = 0
           var pos = 0
+          var index = -1
 
           this.meta.content.replace(/{{\w{46}}}/g,
             function(match, offset, s){
@@ -225,6 +237,7 @@ export default {
                 })
               }
               pos = offset + match.length
+              index = index + 1
 
               let curCard = JSON.parse(cardContents[counter])
               tempChildList.push({
@@ -233,6 +246,7 @@ export default {
                 selectCardType: curCard.card_type,
                 hash: "",
                 pureText: false,
+                index: index
               })
               counter++;
               return match;
@@ -270,7 +284,7 @@ export default {
   }
 
   .textarea {
-    width: 600px;
+    width: 100%;
     height: 100%;
     background: #cccdd6;
     border: 1px solid #dcdfe6;
@@ -279,9 +293,8 @@ export default {
     padding: 2px;
   }
 
-  el-main.main-card {
-    position: absolute;
-    left: 2px;
+  .el-main {
+    line-height: 160px;
   }
 
   .card {
@@ -289,16 +302,13 @@ export default {
     height: 100%;
   }
 
-  .el-header {
+  .el-header, .el-footer {
     padding: 0 0 0 8px;
     background-color: #B3C0D1;
     color: #333;
     text-align: center;
     line-height: 60px;
     overflow: visible;
-  }
-
-  .title-edit {
     font-size: 1em !important;
   }
 

@@ -10,7 +10,6 @@ export function createStore(){
   return new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production',
     state: {
-      // TODO: Better to use a Hash map here and then transfer it into the desired list
       cardSelectionList: {
         trigger: '@',
         selectTemplate: function (item) {
@@ -18,7 +17,26 @@ export function createStore(){
         },
         values: [],
       },
-      updateTime: 0
+      updateTime: 0,
+      treeList: [{
+        label: 'card1',
+        children: []
+      },{
+        label: 'card2',
+        children: [{
+          label: 'card2.1',
+          children: [{
+            label: 'card2.1.1',
+            children: []
+          }, {
+            label: 'card2.2.2',
+            children: []
+          }]
+        }]
+      }, {
+        label: 'card3',
+        children: []
+      }]
     },
     actions:{
       LOAD_CARD_LIST: ({state, commit}) => {
@@ -76,7 +94,7 @@ export function createStore(){
       },
       UPDATE_TIME: (state) => {
         state.updateTime = Date.now()
-      }
+      },
     }
   })
 }

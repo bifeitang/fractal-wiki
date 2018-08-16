@@ -56,7 +56,14 @@
     <!-- In the displaying mode -->
     <div class="card" type="button" v-if="!isEdit" @dblclick="editCard">
       <div v-if="meta.selectCardType === 'Markdown'">
+        <!-- For the child, the compiledMarkdown haven't been initialized
+            Want to find a way to make sure the data is already changed to  -->
+        <div v-if="isReferableMarkdown">
           <div v-html="compiledMarkdown" class="markdown-body"></div>
+        </div>
+        <div v-else>
+          <div v-html="meta.content" class="markdown-body"></div>
+        </div>
       </div>
       <div v-else-if="meta.selectCardType === 'Image'">
 
@@ -94,6 +101,7 @@
 
     </div>
   </el-container>
+
   <div v-else>
     {{meta.content}}
   </div>
@@ -118,6 +126,10 @@ export default {
           pureText: false,
         }
       }
+    },
+    parentShow: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -130,6 +142,14 @@ export default {
     compiledMarkdown() {
       console.log("Inside the markdown function")
       return this.simplemde.markdown(this.meta.content)
+    },
+    isReferableMarkdown() {
+      console.log("!!!???" +this.$refs.markdownEditor)
+      if (typeof(this.$refs.markdownEditor) == "undefined") {
+        return false;
+      } else {
+        return true;
+      }
     }
   },
   data () {
@@ -137,11 +157,11 @@ export default {
       meta: this.metadata,
       cardTypes: ["CSS", "JavaScript", "Plain", "HTML", "Markdown", "Image"],
       action: 'unfold',
-      show: true,
       isEdit: false,
       childCards: [],
       editTime: 0,
       cardHash: "",
+      show: this.parentShow,
       fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
     }
   },
@@ -159,7 +179,9 @@ export default {
     },
     finishEdit() {
       this.isEdit = false;
-
+      if (this.meta.selectCardType === 'Markdown') {
+        this.meta.content = this.simplemde.markdown(this.meta.content)
+      }
       if (this.editTime === 0) {
         fetchJSON('fn/card/cardCreate', {
           title: this.meta.title,
@@ -167,6 +189,8 @@ export default {
           card_type: this.meta.selectCardType,
         }).then(hash => {
           this.cardHash = hash
+        }).catch( error => {
+          console.log(error)
         })
       } else {
         fetchJSON('fn/card/cardUpdate', {

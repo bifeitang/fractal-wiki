@@ -2,8 +2,7 @@
   <!-- Edit Mode -->
   <el-container
   style=" border: 1px solid #eee"
-  class="is-hover-shadow"
-  v-if="!meta.pureText">
+  class="is-hover-shadow">
     <div class="card" type="button" v-if="isEdit" @dblclick="editCard">
       <el-header style="text-align: center; font-size: 16px">
         <el-row :gutter="20">
@@ -60,9 +59,6 @@
       </el-main>
     </div>
   </el-container>
-  <div v-else>
-    {{meta.content}}
-  </div>
 </template>
 
 <script>

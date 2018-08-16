@@ -4,7 +4,9 @@
   "Name": "HoloWiki",
   "Properties": {
     "description": "fractal wiki on holochain",
-    "language": "en"
+    "language": "en",
+    "textSearchSpec": "{\"anchor\":{\"fields\":[]},\"card\":{\"fields\":[{\"fieldName\":\"title\",\"weight\":3},{\"fieldName\":\"content\",\"weight\":1},{\"fieldName\":\"author\",\"weight\":2}]}}",
+    "indexSpec": "{\"anchor\":[],\"card\":[{\"fieldName\":\"timestamp\"}]}"
   },
   "PropertiesSchemaFile": "properties_schema.json",
   "DHTConfig": {
@@ -119,6 +121,62 @@
           "Name": "updateCardList",
           "CallingType": "string",
           "Exposure": "public"
+        },
+        {
+          "Name": "fieldCardSearch",
+          "CallingType": "json",
+          "Exposure": "public"
+        }
+      ]
+    },
+    {
+      "Name": "querysearch",
+      "Description": "Generic indexing functions provision",
+      "RibosomeType": "js",
+      "CodeFile": "querysearch.js",
+      "Config": {
+        "ErrorHandling": "throwErrors"
+      },
+      "Functions": [
+        {
+          "Name": "indexKeywordQS",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "indexQS",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "queryQS",
+          "CallingType": "json",
+          "Exposure": "public"
+        },
+        {
+          "Name": "searchQS",
+          "CallingType": "json",
+          "Exposure": "public"
+        }
+      ],
+      "Entries": [
+        {
+          "Name": "keywordAnchor",
+          "DataFormat": "json",
+          "SchemaFile": "keywordAnchor.json",
+          "Sharing": "public"
+        },
+        {
+          "Name": "skel_anchor",
+          "DataFormat": "json",
+          "SchemaFile": "skel_anchor.json",
+          "Sharing": "public"
+        },
+        {
+          "Name": "skel_card",
+          "DataFormat": "json",
+          "SchemaFile": "skel_card.json",
+          "Sharing": "public"
         }
       ]
     }

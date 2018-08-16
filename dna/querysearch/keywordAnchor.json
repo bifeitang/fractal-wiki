@@ -1,0 +1,10 @@
+{
+    "name" : "keywordAnchor",
+    "type" : "object",
+    "properties" : {
+        "keyword" : {"type" : "string"},
+        "sourceEntryHash" : {"type" : "string"}
+    },
+    "required" : ["keyword", "sourceEntryHash"],
+    "indexFields" : [{"keyword" : 1}]
+}
